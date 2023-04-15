@@ -199,12 +199,15 @@ def trinkgeld(d, m, j, driver, sheet):
     if laenge:
         laenge = laenge + 2
         for i in range(laenge):
+            gut=0
             if i < 2:
                 continue
             k = driver.find_element(By.XPATH, f"//table[@width='98%']/tbody/tr[{i}]/td[9]").text
+            if driver.find_element(By.XPATH, f"//table[@width='98%']/tbody/tr[{i}]/td[11]").text== "Trinkgeld (Gutschrift)":
+                gut =1
             k = k.replace(",", ".")
             k = float(k)
-            if k > 0:
+            if k > 0 or gut==1:
                 tip = tip + k
         tip=tip.__round__(3)
         sheet.cell(6, 1, "Tip")
