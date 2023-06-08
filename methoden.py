@@ -172,7 +172,7 @@ def einfuegen(tupel, liste, name):
 
 def pruefen(restaurant,gutscheinnr):
     for i in restaurant:
-        if i[10] == 'Kartenzahlung (Gutschrift)' or i[10] == "Bar gegeben (Gutschrift)" or i[10] == "Debitorenrechnung (Gutschrift)" or i[6]in gutscheinnr:
+        if "-" not in i[8]:
             betrag = f"-{i[8]}"
             tisch = i[5]
             zeit = datetime.strptime(i[0],"%d.%m.%y %H:%M:%S")
@@ -203,7 +203,7 @@ def trinkgeld(d, m, j, driver, sheet):
             if i < 2:
                 continue
             k = driver.find_element(By.XPATH, f"//table[@width='98%']/tbody/tr[{i}]/td[9]").text
-            if driver.find_element(By.XPATH, f"//table[@width='98%']/tbody/tr[{i}]/td[11]").text== "Trinkgeld (Gutschrift)":
+            if "-" in driver.find_element(By.XPATH, f"//table[@width='98%']/tbody/tr[{i}]/td[9]").text:
                 gut =1
             k = k.replace(",", ".")
             k = float(k)
