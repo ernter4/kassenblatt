@@ -210,6 +210,7 @@ def trinkgeld(d, m, j, driver, sheet):
             if k > 0 or gut==1:
                 tip = tip + k
         tip=tip.__round__(3)
+        tip =deutschezahl(tip)
         sheet.cell(6, 1, "Tip")
         sheet.cell(6, 3, f"{tip}€")
         sheet.cell(6, 4, f"-{tip}€")
@@ -237,7 +238,7 @@ def bar(sheet,gestern):
         if c[i]=="." and i!=len(c)-3:
             c=c[:i]+c[i+1:]
     c=float(c)
-    sheet.cell(4,3,f"{c}€")
+    sheet.cell(4,3,f"{deutschezahl(c)}€")
     book = openpyxl.load_workbook('Z:/Auswertungen Kasse/2022-04-04 Zählprotokoll - neu.xlsm', keep_vba=True)
     blatt = book.get_sheet_by_name("Kasse")
     a=3
@@ -251,12 +252,12 @@ def bar(sheet,gestern):
     zeile =9
     while breite<=5:
         if blatt.cell(a,breite).value is not None :
-            sheet.cell(zeile,4,blatt.cell(a,breite).value)
+            sheet.cell(zeile,4,deutschezahl(blatt.cell(a,breite).value))
             zeile+=1
         breite+=1
     betrag = iterieren(blatt.cell(a,6).value,blatt)
     betrag = betrag.__round__(3)
-    sheet.cell(14,5,f"{betrag}€")
+    sheet.cell(14,5,f"{deutschezahl(betrag)}€")
     book.save('Z:/Auswertungen Kasse/2022-04-04 Zählprotokoll - neu.xlsm')
     return sheet
 def iterieren(zelle ,sheet):
@@ -283,3 +284,13 @@ def iterieren(zelle ,sheet):
         else:
             return eval(zelle.replace("=",""))
         return betrag
+
+def deutschezahl(zahl):
+    zahl = str(zahl)
+    zahl = zahl.replace(".",",")
+    if "," in zahl:
+        while len(zahl)-zahl.index(",")<3:
+            zahl = zahl + "0"
+    else:
+        zahl = zahl + ",00"
+    return zahl
